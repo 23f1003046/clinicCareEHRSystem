@@ -11,6 +11,7 @@ import com.healthCareAnalyzer.Health_Care_Backend.repository.PhlebotomistTestRep
 import com.healthCareAnalyzer.Health_Care_Backend.utility.ExtractUsernameFromToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Service
+@Slf4j
 public class PhlebotomistTestService {
     private final AppointmentRepository appointmentRepository;
     private final PhlebotomistTestRepository phlebotomistTestRepository;
@@ -108,7 +110,10 @@ public class PhlebotomistTestService {
 
         PhlebotomistTestEntity phlebotomistTestEntity = optionalPhlebotomistTestEntity.get();
         Long[] labTestIds = phlebotomistTestEntity.getLabTestIds();
-        List<String> patientTestData = Stream.of(phlebotomistTestEntity.getPatientTestData()).filter(e -> !e.equals(",")).toList();
+
+
+        String[] stringOfPatientTestData = phlebotomistTestEntity.getPatientTestData().split(",");
+        LinkedList<String> patientTestData = new LinkedList<>(Arrays.asList(stringOfPatientTestData));
 
         HashMap<String,HashMap<String,String>> patientTestDataMap = new HashMap<>();
 
@@ -118,9 +123,11 @@ public class PhlebotomistTestService {
             HashMap<String,String> fieldsMap = new HashMap<>();
 
             for (String fieldName : fieldNamesList) {
-                fieldsMap.putIfAbsent(fieldName, patientTestData.getFirst());
-                patientTestData.removeFirst();
+                fieldsMap.putIfAbsent(fieldName, patientTestData.poll());
+
+
             }
+
             patientTestDataMap.putIfAbsent(labTestsEntity.getLabTestName(),fieldsMap);
         }
 
