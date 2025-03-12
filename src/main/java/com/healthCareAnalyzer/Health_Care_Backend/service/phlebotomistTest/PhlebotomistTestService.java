@@ -4,7 +4,6 @@ import com.healthCareAnalyzer.Health_Care_Backend.dto.phlebotomist.CreatePhlebot
 import com.healthCareAnalyzer.Health_Care_Backend.dto.phlebotomist.SaveLabTestRecordsDto;
 import com.healthCareAnalyzer.Health_Care_Backend.entity.AppointmentEntity;
 import com.healthCareAnalyzer.Health_Care_Backend.entity.LabTestsEntity;
-import com.healthCareAnalyzer.Health_Care_Backend.entity.PhlebotomistEntity;
 import com.healthCareAnalyzer.Health_Care_Backend.entity.PhlebotomistTestEntity;
 import com.healthCareAnalyzer.Health_Care_Backend.repository.AppointmentRepository;
 import com.healthCareAnalyzer.Health_Care_Backend.repository.LabTestsRepository;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
