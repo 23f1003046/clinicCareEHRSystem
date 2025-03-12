@@ -69,5 +69,11 @@ public class DoctorDiagnosisController {
         return doctorFeedbackService.createDoctorFeedbackRecord(createDoctorFeedbackRecordDto);
     }
 
+    @GetMapping("/getPhlebotomistTestRecords")
+    public ResponseEntity<?> getPhlebotomistTestRecords(@RequestParam Long appointmentId, HttpServletRequest request) {
+        return phlebotomistTestService.getPhlebotomistTestRecordsByAppointmentId(appointmentId,request);
+
+    }
+
 
 }

@@ -17,4 +17,6 @@ public class AddNewMedicineInventoryRequestDto {
     private Integer medicineQuantity;
     @NotBlank
     private String medicineSerialNumber;
+    @NotNull
+    private Float medicinePrice;
 }

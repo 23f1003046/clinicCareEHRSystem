@@ -32,6 +32,7 @@ public class LabTestService {
             LabTestsEntity labTestsEntity = new LabTestsEntity();
             labTestsEntity.setLabTestName(addNewLabTestRequestDto.getLabTestName());
             labTestsEntity.setLabTestFields(addNewLabTestRequestDto.getLabTestFields());
+            labTestsEntity.setPrice(addNewLabTestRequestDto.getLabTestPrice());
             labTestsEntityList.add(labTestsEntity);
         }
 

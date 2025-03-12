@@ -4,6 +4,7 @@ import com.healthCareAnalyzer.Health_Care_Backend.dto.medicineInventory.AddNewMe
 import com.healthCareAnalyzer.Health_Care_Backend.entity.MedicineInventoryEntity;
 import com.healthCareAnalyzer.Health_Care_Backend.repository.MedicineInventoryRepository;
 import jakarta.validation.Valid;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,16 +25,22 @@ public class MedicineInventoryService {
 
         List<MedicineInventoryEntity> medicineInventoryEntityList = new ArrayList<>();
         for (AddNewMedicineInventoryRequestDto addNewMedicineInventoryRequestDto : addNewMedicineInventoryRequestDtoList) {
-            MedicineInventoryEntity medicineInventoryEntity = new MedicineInventoryEntity();
-            medicineInventoryEntity.setMedicineName(addNewMedicineInventoryRequestDto.getMedicineName());
-            medicineInventoryEntity.setMedicineQuantity(addNewMedicineInventoryRequestDto.getMedicineQuantity());
-            medicineInventoryEntity.setMedicineSerialNumber(addNewMedicineInventoryRequestDto.getMedicineSerialNumber());
+            MedicineInventoryEntity medicineInventoryEntity = getMedicineInventoryEntity(addNewMedicineInventoryRequestDto);
             medicineInventoryEntityList.add(medicineInventoryEntity);
         }
         medicineInventoryRepository.saveAll(medicineInventoryEntityList);
 
         return ResponseEntity.ok("Successfully added medicine inventory");
 
+    }
+
+    private static @NotNull MedicineInventoryEntity getMedicineInventoryEntity(AddNewMedicineInventoryRequestDto addNewMedicineInventoryRequestDto) {
+        MedicineInventoryEntity medicineInventoryEntity = new MedicineInventoryEntity();
+        medicineInventoryEntity.setMedicineName(addNewMedicineInventoryRequestDto.getMedicineName());
+        medicineInventoryEntity.setMedicineQuantity(addNewMedicineInventoryRequestDto.getMedicineQuantity());
+        medicineInventoryEntity.setMedicineSerialNumber(addNewMedicineInventoryRequestDto.getMedicineSerialNumber());
+        medicineInventoryEntity.setPrice(addNewMedicineInventoryRequestDto.getMedicinePrice());
+        return medicineInventoryEntity;
     }
 
     public ResponseEntity<?> getAllMedicineInventory() {

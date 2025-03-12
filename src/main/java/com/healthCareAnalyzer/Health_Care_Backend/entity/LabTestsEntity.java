@@ -15,7 +15,7 @@ public class LabTestsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long labTestId;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String labTestName;
     @Column(columnDefinition = "text[]")
     private String[] labTestFields;
