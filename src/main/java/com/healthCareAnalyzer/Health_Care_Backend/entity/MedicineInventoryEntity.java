@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "medicine_inventory_table")
@@ -20,4 +21,6 @@ public class MedicineInventoryEntity {
     private Integer medicineQuantity;
     @Column(nullable = false)
     private String medicineSerialNumber;
+    @ColumnDefault("25")
+    private Float price;
 }

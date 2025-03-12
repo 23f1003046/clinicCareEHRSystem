@@ -44,4 +44,6 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
     Optional<AppointmentEntity> findByAppointmentIdAndDoctor_UserEntity_UsernameAndStageNotIn(Long appointmentId, String doctor_userEntity_username, Collection<String> stage);
 
     List<AppointmentEntity> findByPatient_UserEntity_Username(String username);
+
+    Optional<AppointmentEntity> findByPatient_UserEntity_UsernameAndStage(String username, String receptionist);
 }
