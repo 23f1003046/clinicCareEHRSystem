@@ -7,6 +7,7 @@ import com.healthCareAnalyzer.Health_Care_Backend.service.admin.AdminService;
 import com.healthCareAnalyzer.Health_Care_Backend.service.labTest.LabTestService;
 import com.healthCareAnalyzer.Health_Care_Backend.service.medicineInventory.MedicineInventoryService;
 import com.healthCareAnalyzer.Health_Care_Backend.service.stage.StageService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@SecurityRequirement(name = "bearerAuth")
 @Slf4j
 public class AdminController {
 

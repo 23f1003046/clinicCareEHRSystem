@@ -2,6 +2,7 @@ package com.healthCareAnalyzer.Health_Care_Backend.controller.phlebotomist;
 
 import com.healthCareAnalyzer.Health_Care_Backend.dto.phlebotomist.SaveLabTestRecordsDto;
 import com.healthCareAnalyzer.Health_Care_Backend.service.phlebotomistTest.PhlebotomistTestService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/phlebotomist")
 @PreAuthorize("hasAuthority('ROLE_PHLEBOTOMIST')")
+@SecurityRequirement(name = "bearerAuth")
 @Slf4j
 public class PhlebotomistController {
 
