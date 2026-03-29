@@ -5,6 +5,7 @@ import com.healthCareAnalyzer.Health_Care_Backend.dto.patient.GetAllDoctorsRespo
 import com.healthCareAnalyzer.Health_Care_Backend.dto.patient.GetOpenSlotsRequestDto;
 import com.healthCareAnalyzer.Health_Care_Backend.service.appointment.AppointmentService;
 import com.healthCareAnalyzer.Health_Care_Backend.service.patient.PatientAppointmentBookingService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/patient/appointment")
 @PreAuthorize("hasAuthority('ROLE_PATIENT')")
+@SecurityRequirement(name = "bearerAuth")
 @Slf4j
 public class PatientAppointmentController {
 

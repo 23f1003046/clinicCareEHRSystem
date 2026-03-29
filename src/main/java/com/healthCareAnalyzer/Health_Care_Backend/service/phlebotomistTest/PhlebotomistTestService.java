@@ -8,26 +8,31 @@ import com.healthCareAnalyzer.Health_Care_Backend.entity.PhlebotomistTestEntity;
 import com.healthCareAnalyzer.Health_Care_Backend.repository.AppointmentRepository;
 import com.healthCareAnalyzer.Health_Care_Backend.repository.LabTestsRepository;
 import com.healthCareAnalyzer.Health_Care_Backend.repository.PhlebotomistTestRepository;
+import com.healthCareAnalyzer.Health_Care_Backend.utility.ExtractUsernameFromToken;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Service
+@Slf4j
 public class PhlebotomistTestService {
     private final AppointmentRepository appointmentRepository;
     private final PhlebotomistTestRepository phlebotomistTestRepository;
     private final LabTestsRepository labTestsRepository;
+    private final ExtractUsernameFromToken extractUsernameFromToken;
 
-    public PhlebotomistTestService(AppointmentRepository appointmentRepository, PhlebotomistTestRepository phlebotomistTestRepository, LabTestsRepository labTestsRepository) {
+    public PhlebotomistTestService(AppointmentRepository appointmentRepository, PhlebotomistTestRepository phlebotomistTestRepository, LabTestsRepository labTestsRepository, ExtractUsernameFromToken extractUsernameFromToken) {
         this.appointmentRepository = appointmentRepository;
         this.phlebotomistTestRepository = phlebotomistTestRepository;
         this.labTestsRepository = labTestsRepository;
+        this.extractUsernameFromToken = extractUsernameFromToken;
     }
 
     public ResponseEntity<?> createPhlebotomistTestRecord(@Valid CreatePhlebotomistTestRecordDto createPhlebotomistTestRecordDto) {
@@ -85,5 +90,49 @@ public class PhlebotomistTestService {
         appointmentRepository.save(appointmentEntity);
 
         return ResponseEntity.ok().body("Phlebotomist test record saved successfully");
+    }
+
+    public ResponseEntity<?> getPhlebotomistTestRecordsByAppointmentId(Long appointmentId, HttpServletRequest request) {
+
+        Optional<AppointmentEntity> optionalAppointmentEntity = appointmentRepository.findById(appointmentId);
+        if (optionalAppointmentEntity.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found");
+        }
+
+        if(!optionalAppointmentEntity.get().getDoctor().getUserEntity().getUsername().equals(extractUsernameFromToken.extractUsernameFromToken(request))) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        }
+
+        Optional<PhlebotomistTestEntity> optionalPhlebotomistTestEntity = phlebotomistTestRepository.findByAppointmentEntity(optionalAppointmentEntity.get());
+        if (optionalPhlebotomistTestEntity.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Phlebotomist test not found");
+        }
+
+        PhlebotomistTestEntity phlebotomistTestEntity = optionalPhlebotomistTestEntity.get();
+        Long[] labTestIds = phlebotomistTestEntity.getLabTestIds();
+
+
+        String[] stringOfPatientTestData = phlebotomistTestEntity.getPatientTestData().split(",");
+        LinkedList<String> patientTestData = new LinkedList<>(Arrays.asList(stringOfPatientTestData));
+
+        HashMap<String,HashMap<String,String>> patientTestDataMap = new HashMap<>();
+
+        for(Long labTestId : labTestIds) {
+            LabTestsEntity labTestsEntity = labTestsRepository.findById(labTestId).get();
+            String[] fieldNamesList = labTestsEntity.getLabTestFields();
+            HashMap<String,String> fieldsMap = new HashMap<>();
+
+            for (String fieldName : fieldNamesList) {
+                fieldsMap.putIfAbsent(fieldName, patientTestData.poll());
+
+
+            }
+
+            patientTestDataMap.putIfAbsent(labTestsEntity.getLabTestName(),fieldsMap);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(patientTestDataMap);
+
+
     }
 }

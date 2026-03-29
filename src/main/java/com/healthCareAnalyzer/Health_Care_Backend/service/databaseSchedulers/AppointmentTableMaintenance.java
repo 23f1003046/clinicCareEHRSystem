@@ -23,7 +23,5 @@ public class AppointmentTableMaintenance {
         appointmentRepository.deleteUnapprovedAppointments(LocalDate.now());
         log.warn("Old records deleted successfully!");
     }
-
-
 }
 
