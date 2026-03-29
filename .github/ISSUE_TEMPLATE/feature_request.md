@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-description: Propose a new feature for the EHR system
+about: Propose a new feature for the EHR system
 title: "[FEATURE] "
 labels: ["enhancement"]
 assignees: []
